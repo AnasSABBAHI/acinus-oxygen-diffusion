@@ -1,1 +1,1 @@
-# Test package for acinus diffusion model
+# Test package for the acinus diffusion model
