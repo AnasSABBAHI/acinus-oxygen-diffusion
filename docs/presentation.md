@@ -1,10 +1,10 @@
 # Oxygen Diffusion in Pulmonary Acinus
-Computational Modeling and Analysis
+*Computational Modeling and Analysis*
 
 ---
 ## Research Team
 - Aya KAMOUNI
-- Kpankpan Edouard KAMBIRE  
+- Kpankpan Edouard KAMBIRE
 - H'nia HARRAS
 - Anas SABBAHI
 
@@ -31,113 +31,110 @@ Objectives:
 ## Mathematical Framework
 
 ### Diffusion Equation
-\[
+$$
 \frac{\partial C}{\partial t} = D \nabla^2 C
-\]
+$$
 
 ### Stationary Case
-\[
+$$
 \nabla^2 C = 0
-\]
+$$
 
 ### Boundary Conditions
-- **Dirichlet:** \( C = C_a - C_b \) (alveolar surface)
-- **Robin:** \( \frac{\partial C}{\partial n} = -\frac{C}{\Lambda} \) (capillary)
-- **Neumann:** \( \frac{\partial C}{\partial n} = 0 \) (sides)
+With $u = C - C_b$:
+- **Dirichlet:** $u = C_a - C_b$ (alveolar air)
+- **Robin:** $\partial u / \partial n = -u / \Lambda$, $\Lambda = D/W$ (membrane, capillaries)
+- **Neumann:** $\partial u / \partial n = 0$ (sides)
 
 ---
 ## Numerical Implementation
 
 ### Finite Difference Method
-\[
+$$
 \frac{C_{i+1,j} + C_{i-1,j} + C_{i,j+1} + C_{i,j-1} - 4C_{i,j}}{h^2} = 0
-\]
+$$
 
 ### Linear System
-\[
+$$
 A\mathbf{C} = \mathbf{b}
-\]
+$$
 
 - Sparse matrix formulation
-- Efficient numerical solvers
-- Adaptive grid refinement
+- Direct sparse solver (SciPy)
+- Validated against the exact solution (error < 10⁻¹²)
 
 ---
 ## Stationary Regime Results
 
 ### Concentration Field
-![Stationary Concentration](results/stationary.png)
+![Stationary Concentration](figures/stationary.png)
 
 **Key observations:**
-- Smooth concentration gradients
+- Linear concentration profile (exact solution)
 - Maximum at alveolar surface
-- Screening effects visible
-- Flux depends on Λ parameter
+- Small drop across the domain when Λ ≫ L
+- Flux $\Phi = D (C_a - C_b) L / (L + \Lambda)$
 
 ---
 ## Screening Effect Analysis
 
 ### Oxygen Flux vs Screening Length
-![Flux vs Lambda](results/flux_lambda.png)
+![Flux vs Lambda](figures/flux_lambda.png)
 
 **Findings:**
-- Flux ∝ 1/Λ for small Λ
-- Screening length critical parameter
-- Optimal Λ ≈ 0.28 m for human acinus
-- Explains acinar size constraints
+- Flux decreases monotonically with Λ
+- Λ ≪ L: diffusion-limited, flux → D ΔC (screening)
+- Λ ≫ L: membrane-limited, flux ∝ 1/Λ
+- Physiological Λ ≈ 0.28 m: membrane-limited at the 1 cm scale
 
 ---
 ## Quasi-Stationary Regime
 
 ### Breathing Dynamics
 Boundary condition:
-\[
-C(x,y=L) = C_a - C_b + C_1(\cos\omega t - 1)
-\]
+$$
+u(x, y=L) = C_a - C_b + C_1(\cos\omega t - 1)
+$$
 
 ### Time-Dependent Results
-![Breathing Animation](results/breathing.gif)
+![Breathing Animation](figures/breathing.gif)
 
 **Features:**
 - Periodic concentration variations
-- Flux oscillations at breathing frequency
-- Phase shifts in different regions
+- Flux oscillates in phase with breathing
+- Cycle-averaged flux independent of breathing rate
+- Valid when $L^2/D$ ≪ breathing period
 
 ---
 ## COPD Pathology Modeling
 
 ### Domain Deformation
-![COPD Domain](results/copd_domain.png)
+![COPD Domain](figures/copd_domain.png)
 
 ### Pathological Effects
-- Reduced surface area
-- Impaired diffusion efficiency
-- Local concentration deficits
-- Increased screening effects
+- Destroyed tissue: impermeable obstacles to diffusion
+- Membrane thickening: lower permeability, larger Λ
+- Destruction alone: < 1% flux reduction at physiological Λ, 9-14% when Λ ≲ L
 
-**Flux reduction:** 30-50% in severe cases
+**Flux reduction:** ≈ 50% when membrane permeability is halved
 
 ---
 ## Key Findings
 
-1. **Screening phenomenon** confirmed numerically
-2. **Optimal acinar size** explained by diffusion constraints
-3. **Breathing dynamics** successfully modeled
-4. **COPD pathology** quantifiable through flux reduction
-5. **Model validation** against physiological data
+1. **Solver validated** against the exact solution
+2. **Screening phenomenon**: diffusion- vs membrane-limited regimes
+3. **Breathing dynamics** modeled in the quasi-stationary approximation
+4. **COPD pathology**: membrane damage dominates in the membrane-limited regime
 
 ---
 ## Clinical Implications
 
-### Diagnostic Applications
+### Potential Applications
 - Quantify gas exchange impairment
-- Predict hypoxemia severity
-- Evaluate treatment efficacy
+- Understand which structural changes matter most
+- Basis for patient-specific models
 
-### Therapeutic Insights
-- Optimal drug delivery strategies
-- Ventilation optimization
-- Surgical planning
+*Qualitative results, not validated against clinical data.*
 
 ---
 ## Limitations and Future Work
@@ -146,7 +143,7 @@ C(x,y=L) = C_a - C_b + C_1(\cos\omega t - 1)
 - 2D geometry simplification
 - Homogeneous tissue assumption
 - Constant diffusion coefficient
-- Simplified boundary conditions
+- Quasi-stationary approximation
 
 ### Future Directions
 - 3D anatomical reconstruction
@@ -157,10 +154,10 @@ C(x,y=L) = C_a - C_b + C_1(\cos\omega t - 1)
 ---
 ## Conclusion
 
-- Developed comprehensive diffusion model
-- Successfully simulated normal and pathological conditions
-- Provided quantitative insights into gas exchange
-- Established framework for clinical applications
+- Developed and validated a finite-difference diffusion model
+- Simulated normal and pathological conditions
+- Provided quantitative insights into the screening effect
+- Established a framework for more realistic geometries
 
 **The model bridges computational methods and respiratory physiology.**
 
@@ -174,6 +171,6 @@ C(x,y=L) = C_a - C_b + C_1(\cos\omega t - 1)
 ---
 ## References
 
-1. Sapoval et al. (2002) *PNAS*
-2. Felici et al. (2003) *J Appl Physiol*
+1. Sapoval, Filoche & Weibel (2002) *PNAS* 99:10411
+2. Felici, Filoche & Sapoval (2003) *J Appl Physiol* 94:2010
 3. Weibel (1984) *Pathway for Oxygen*
