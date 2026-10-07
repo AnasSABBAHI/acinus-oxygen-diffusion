@@ -14,8 +14,3 @@ This project models oxygen transport in the pulmonary acinus, the functional uni
 - **Multiple Boundary Conditions**: Dirichlet, Neumann, and Robin conditions
 - **Parameter Studies**: Screening length effects and flux analysis
 
-## Installation
-
-### Using pip
-```bash
-pip install -r requirements.txt
